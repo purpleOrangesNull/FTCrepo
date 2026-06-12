@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.subsystems;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
+import org.firstinspires.ftc.teamcode.Telem;
+
 public class intake {
     private DcMotor intakeMotor;
 public intakeState state;
@@ -22,19 +24,21 @@ public void setState(intakeState state) {
             intakeMotor.setPower(1.0);
             break;
         case OFF:
-            intakeMotor.setPower(1.0);
+            intakeMotor.setPower(0.0);
     break;
     }
 
 }
 
-@Override
-    public void SState(){
+    public void periodic(){
     setState(state);
 }
-    public void getState(){
+    public intakeState getState(){
         return state;
     }
-
+public void telemetry (){
+    Telem.addLine("intake");
+    Telem.addData("State", state);
+}
 }
 

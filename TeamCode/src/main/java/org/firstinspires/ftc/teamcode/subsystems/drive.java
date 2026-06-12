@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.robot.subsystems;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+
+import org.firstinspires.ftc.teamcode.Telem;
 import org.firstinspires.ftc.teamcode.utils.MyTelem;
 
 public class Drivetrain {
@@ -42,8 +44,5 @@ public class Drivetrain {
         drive(0, 0, 0);
     }
 
-    public void telemetry() {
-        MyTelem.addLine("=== DRIVETRAIN ===");
-        MyTelem.addData("State", state);
-    }
+
 }
