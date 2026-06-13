@@ -27,8 +27,6 @@ public class teleop extends LinearOpMode {
                 //add in reverse here later
             } else {
                 robot.intake.setState(intake.intakeState.ON);
-            }
-
 
             robot.update(gamepad1.a);
         }

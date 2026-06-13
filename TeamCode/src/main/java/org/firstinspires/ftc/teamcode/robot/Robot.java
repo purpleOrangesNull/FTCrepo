@@ -15,24 +15,45 @@ public class Robot {
 private DcMotor  frontLeft, frontRight, backLeft, backRight;
     private DcMotor intakeMotor;
     private List <LynxModule> hubs;
-
     public org.firstinspires.ftc.teamcode.subsystems.Drivetrain drivetrain;    public intake intake;
-
     private ElapsedTime loopTimer = new ElapsedTime();
-    private double loopTime=0;
+
+
+
+
+   private double loopTime=0;
+
+
+
+
+
+
+
+
+
+
+
     public Robot(HardwareMap hm) {   frontLeft   = hm.get(DcMotor.class, "front_left");
         frontRight  = hm.get(DcMotor.class, "front_right");
         backLeft    = hm.get(DcMotor.class, "back_left");
         backRight   = hm.get(DcMotor.class, "back_right");
         intakeMotor = hm.get(DcMotor.class, "intake");
+
         drivetrain = new Drivetrain(frontLeft, frontRight, backLeft, backRight);
         intake     = new intake(intakeMotor);
+
+
         hubs = hm.getAll(LynxModule.class);
         for (LynxModule hub : hubs) {
             hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
         }
         loopTimer.reset();
     }
+
+
+
+
+
     public void update (boolean mode){
         loopTime= loopTimer.milliseconds();
         loopTimer.reset();
