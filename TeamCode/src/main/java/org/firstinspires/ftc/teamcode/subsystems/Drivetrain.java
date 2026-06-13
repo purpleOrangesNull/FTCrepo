@@ -1,9 +1,7 @@
-package org.firstinspires.ftc.teamcode.robot.subsystems;
-
+package org.firstinspires.ftc.teamcode.subsystems;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.Telem;
-import org.firstinspires.ftc.teamcode.utils.MyTelem;
 
 public class Drivetrain {
     private DcMotor frontLeft, frontRight, backLeft, backRight;
@@ -44,5 +42,9 @@ public class Drivetrain {
         drive(0, 0, 0);
     }
 
+public void telemetry(){
+        Telem.addLine("Drivetrain");
+    Telem.addData("State", state);
 
+}
 }
