@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.robot;
 
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.subsystems.Drivetrain;
@@ -33,12 +34,11 @@ private DcMotor  frontLeft, frontRight, backLeft, backRight;
 
 
 
+    public Robot(HardwareMap hm) {   frontLeft   = hm.get(DcMotor.class, "leftFront");
+        frontRight  = hm.get(DcMotor.class, "rightFront");
+        backLeft    = hm.get(DcMotor.class, "leftBack");
 
-    public Robot(HardwareMap hm) {   frontLeft   = hm.get(DcMotor.class, "front_left");
-        frontRight  = hm.get(DcMotor.class, "front_right");
-        backLeft    = hm.get(DcMotor.class, "back_left");
-
-        backRight   = hm.get(DcMotor.class, "back_right");
+        backRight   = hm.get(DcMotor.class, "rightBack");
         intakeMotor = hm  .get(DcMotor. class, "intake");
         drivetrain = new Drivetrain(frontLeft,frontRight,   backLeft, backRight );
         intake     = new  intake(  intakeMotor);
