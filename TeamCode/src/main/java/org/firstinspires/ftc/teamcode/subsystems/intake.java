@@ -4,10 +4,11 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.Telem;
-
 public class intake {
     private DcMotor intakeMotor;
+
 public intakeState state;
+
 
 public enum intakeState {
     ON, OFF
@@ -22,8 +23,11 @@ public void setState(intakeState state) {
     switch (state) {
         case ON:
             intakeMotor.setPower(1.0);
+
+
             break;
         case OFF:
+
             intakeMotor.setPower(0.0);
     break;
     }

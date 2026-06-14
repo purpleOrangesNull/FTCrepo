@@ -14,9 +14,10 @@ import java.util.List;
 public class Robot {
 private DcMotor  frontLeft, frontRight, backLeft, backRight;
     private DcMotor intakeMotor;
-    private List <LynxModule> hubs;
+    private List <LynxModule>   hubs;
+
     public org.firstinspires.ftc.teamcode.subsystems.Drivetrain drivetrain;    public intake intake;
-    private ElapsedTime loopTimer = new ElapsedTime();
+    private ElapsedTime  loopTimer = new ElapsedTime();
 
 
 
@@ -25,7 +26,7 @@ private DcMotor  frontLeft, frontRight, backLeft, backRight;
 
 
 
-
+//
 
 
 
@@ -36,11 +37,11 @@ private DcMotor  frontLeft, frontRight, backLeft, backRight;
     public Robot(HardwareMap hm) {   frontLeft   = hm.get(DcMotor.class, "front_left");
         frontRight  = hm.get(DcMotor.class, "front_right");
         backLeft    = hm.get(DcMotor.class, "back_left");
-        backRight   = hm.get(DcMotor.class, "back_right");
-        intakeMotor = hm.get(DcMotor.class, "intake");
 
-        drivetrain = new Drivetrain(frontLeft, frontRight, backLeft, backRight);
-        intake     = new intake(intakeMotor);
+        backRight   = hm.get(DcMotor.class, "back_right");
+        intakeMotor = hm  .get(DcMotor. class, "intake");
+        drivetrain = new Drivetrain(frontLeft,frontRight,   backLeft, backRight );
+        intake     = new  intake(  intakeMotor);
 
 
         hubs = hm.getAll(LynxModule.class);
@@ -60,13 +61,13 @@ private DcMotor  frontLeft, frontRight, backLeft, backRight;
         double hz = 1000.0 / loopTime;
         for (LynxModule hub:hubs){
             hub.clearBulkCache();
+
         }
-        Telem.addLine("=== LOOP ===");
-        Telem.addData("Loop Time (ms)", String.format("%.1f", loopTime));
+        Telem.addLine("loop");
+        Telem.addData("Loop Time (ms)", loopTime);
         drivetrain.telemetry();
 
         intake.telemetry();
-        Telem.update();}
 
-}
+        Telem.update();}}
 
