@@ -23,16 +23,16 @@ public class teleop extends LinearOpMode {
             robot.drivetrain.drive(gamepad1.left_stick_x,
                     gamepad1.left_stick_y,
                     gamepad1.right_stick_x);
+
             if (gamepad1.right_bumper) {
-
                 robot.intake.setState(intake.intakeState.ON);
-
-
             } else if (gamepad1.left_bumper) {
                 robot.intake.setState(intake.intakeState.OFF);
                 //add in reverse here later
             } else {
                 robot.intake.setState(intake.intakeState.ON);
+            }
 
-                robot.update(gamepad1.a);
-            }}}}
+            robot.update(gamepad1.a);
+        }
+    }}
