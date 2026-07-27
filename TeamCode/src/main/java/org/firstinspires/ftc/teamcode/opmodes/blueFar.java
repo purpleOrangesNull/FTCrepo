@@ -11,8 +11,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.Telem;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.Constants;
 
-@Autonomous(name = "Close Blue Auto", group = "Autonomous")
-public class blueclose extends OpMode {
+@Autonomous(name = "Far Blue Auto", group = "Autonomous")
+public class blueFar extends OpMode {
     private ElapsedTime timer;
     private Follower follower;
     private Paths paths;
@@ -79,9 +79,21 @@ public class blueclose extends OpMode {
                 return 4;
             case 5:
                 if (!follower.isBusy()) {
-                    return -1;
+                    follower.followPath(paths.Chain7);
+                    return 6;
                 }
                 return 5;
+            case 6:
+                if (!follower.isBusy()) {
+                    follower.followPath(paths.Chain8);
+                    return 7;
+                }
+                return 6;
+            case 7:
+                if (!follower.isBusy()) {
+                    return -1;
+                }
+                return 7;
             default:
                 return pathState;
         }
@@ -94,38 +106,50 @@ public class blueclose extends OpMode {
         public PathChain Chain4;
         public PathChain Chain5;
         public PathChain Chain6;
+        public PathChain Chain7;
+        public PathChain Chain8;
 
         public Paths(Follower follower) {
-            follower.setStartingPose(Poses.startPose);
+            follower.setStartingPose(farPoses.startPose);
 
             MainChain = follower.pathBuilder()
-                    .addPath(new BezierLine(Poses.mc1, Poses.mc2))
-                    .setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(110))
+                    .addPath(new BezierLine(farPoses.mc1, farPoses.mc2))
+                    .setLinearHeadingInterpolation(Math.toRadians(130), Math.toRadians(130))
                     .build();
 
             Chain2 = follower.pathBuilder()
-                    .addPath(new BezierCurve(Poses.mc2, Poses.ctrl2, Poses.mc3))
-                    .setLinearHeadingInterpolation(Math.toRadians(110), Math.toRadians(180))
+                    .addPath(new BezierLine(farPoses.mc2, farPoses.mc3))
+                    .setLinearHeadingInterpolation(Math.toRadians(130), Math.toRadians(170))
                     .build();
 
             Chain3 = follower.pathBuilder()
-                    .addPath(new BezierLine(Poses.mc3, Poses.mc4))
-                    .setLinearHeadingInterpolation(Math.toRadians(110), Math.toRadians(110))
+                    .addPath(new BezierLine(farPoses.mc3, farPoses.mc4))
+                    .setLinearHeadingInterpolation(Math.toRadians(170), Math.toRadians(140))
                     .build();
 
             Chain4 = follower.pathBuilder()
-                    .addPath(new BezierLine(Poses.mc4, Poses.mc5))
-                    .setLinearHeadingInterpolation(Math.toRadians(110), Math.toRadians(180))
+                    .addPath(new BezierCurve(farPoses.mc4, farPoses.ctrl4, farPoses.mc5))
+                    .setLinearHeadingInterpolation(Math.toRadians(140), Math.toRadians(170))
                     .build();
 
             Chain5 = follower.pathBuilder()
-                    .addPath(new BezierLine(Poses.mc5, Poses.mc6))
-                    .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(110))
+                    .addPath(new BezierLine(farPoses.mc5, farPoses.mc6))
+                    .setLinearHeadingInterpolation(Math.toRadians(170), Math.toRadians(130))
                     .build();
 
             Chain6 = follower.pathBuilder()
-                    .addPath(new BezierLine(Poses.mc6, Poses.mc7))
-                    .setTangentHeadingInterpolation()
+                    .addPath(new BezierCurve(farPoses.mc6, farPoses.ctrl6, farPoses.mc7))
+                    .setLinearHeadingInterpolation(Math.toRadians(130), Math.toRadians(170))
+                    .build();
+
+            Chain7 = follower.pathBuilder()
+                    .addPath(new BezierLine(farPoses.mc7, farPoses.mc8))
+                    .setLinearHeadingInterpolation(Math.toRadians(170), Math.toRadians(130))
+                    .build();
+
+            Chain8 = follower.pathBuilder()
+                    .addPath(new BezierLine(farPoses.mc8, farPoses.mc9))
+                    .setLinearHeadingInterpolation(Math.toRadians(130), Math.toRadians(130))
                     .build();
         }
     }
