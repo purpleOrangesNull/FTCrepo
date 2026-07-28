@@ -4,45 +4,46 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.Telem;
+
 public class intake {
-    private DcMotor intakeMotor;
 
-public intakeState state;
+    public static final double INTAKE_POWER = 1.0;
 
+    public enum State { ON, OFF }
 
-public enum intakeState {
-    ON, OFF
-}
-public intake (DcMotor motor){
-    intakeMotor = motor;
-    intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-    state = intakeState.OFF;
-}
-public void setState(intakeState state) {
-    this.state = state;
-    switch (state) {
-        case ON:
-            intakeMotor.setPower(1.0);
+    private final DcMotor motor;
+    private State state = State.OFF;
 
-
-            break;
-        case OFF:
-
-            intakeMotor.setPower(0.0);
-    break;
+    public intake(DcMotor motor) {
+        this.motor = motor;
+        this.motor.setDirection(DcMotorSimple.Direction.REVERSE);
+        this.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        setState(State.OFF);
     }
 
-}
+    public void setState(State state) {
+        this.state = state;
+        switch (state) {
+            case ON:
+                motor.setPower(INTAKE_POWER);
+                break;
+            case OFF:
+                motor.setPower(0.0);
+                break;
+        }
+    }
 
-    public void periodic(){
-    setState(state);
-}
-    public intakeState getState(){
+    public State getState() {
         return state;
     }
-public void telemetry (){
-    Telem.addLine("intake");
-    Telem.addData("State", state);
-}
-}
 
+    public void stop() {
+        setState(State.OFF);
+    }
+
+    public void telemetry() {
+        Telem.addLine("Intake");
+        Telem.addData("State", state);
+        Telem.addData("Power", motor.getPower());
+    }
+}

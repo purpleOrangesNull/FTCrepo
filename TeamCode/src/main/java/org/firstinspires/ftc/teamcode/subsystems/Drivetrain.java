@@ -1,51 +1,83 @@
 package org.firstinspires.ftc.teamcode.subsystems;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.Telem;
 
 public class Drivetrain {
-    private DcMotor frontLeft,frontRight,backLeft,backRight;
 
-    public enum State { DRIVING,  STOPPED }
+    private static final double EPSILON = 1e-3;
+
+    public enum State { DRIVING, STOPPED }
+
+    private final DcMotor frontLeft;
+    private final DcMotor frontRight;
+    private final DcMotor backLeft;
+    private final DcMotor backRight;
+
     private State state = State.STOPPED;
 
     public Drivetrain(DcMotor fl, DcMotor fr, DcMotor bl, DcMotor br) {
-        frontLeft  = fl;
+        frontLeft = fl;
         frontRight = fr;
-        backLeft   = bl;
-        backRight  = br;
+        backLeft = bl;
+        backRight = br;
 
         frontLeft.setDirection(DcMotor.Direction.REVERSE);
         backLeft.setDirection(DcMotor.Direction.REVERSE);
 
-        frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior. BRAKE);
+        frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
-    public void drive(double  lx, double ly, double rx) {
+    /**
+     * @param lx strafe, positive is right
+     * @param ly forward, positive is forward (caller must already have
+     *           inverted the raw gamepad stick value)
+     * @param rx turn, positive is clockwise
+     */
+    public void drive(double lx, double ly, double rx) {
         double fl = ly + lx + rx;
         double fr = ly - lx - rx;
         double bl = ly - lx + rx;
-
         double br = ly + lx - rx;
-        frontLeft. setPower(fl);
+
+        // Scale all four together only if one exceeds 1.0. Letting the motor
+        // controller clip each wheel separately would distort the heading.
+        double max = Math.max(1.0,
+                Math.max(Math.max(Math.abs(fl), Math.abs(fr)),
+                        Math.max(Math.abs(bl), Math.abs(br))));
+
+        fl /= max;
+        fr /= max;
+        bl /= max;
+        br /= max;
+
+        frontLeft.setPower(fl);
         frontRight.setPower(fr);
         backLeft.setPower(bl);
         backRight.setPower(br);
 
-        state = (fl == 0 && fr ==  0 && bl == 0 && br == 0) ? State.STOPPED : State.DRIVING;
+        boolean moving = Math.abs(fl) > EPSILON
+                || Math.abs(fr) > EPSILON
+                || Math.abs(bl) > EPSILON
+                || Math.abs(br) > EPSILON;
 
+        state = moving ? State.DRIVING : State.STOPPED;
     }
 
     public void stop() {
-        drive (0, 0, 0);
+        drive(0, 0, 0);
     }
 
-public void telemetry(){
-        Telem .addLine("Drivetrain");
-    Telem.addData("State", state);
+    public State getState() {
+        return state;
+    }
 
-}
+    public void telemetry() {
+        Telem.addLine("Drivetrain");
+        Telem.addData("State", state);
+    }
 }
