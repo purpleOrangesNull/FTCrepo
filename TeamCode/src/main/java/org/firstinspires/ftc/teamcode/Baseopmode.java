@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmodes;
+package org.firstinspires.ftc.teamcode;
 
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.CommandScheduler;
@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.robot.Robot;
  * command - specifically the Lynx bulk cache clear and the single telemetry
  * flush. Overriding run() is that hook.
  */
-public abstract class BaseOpMode extends CommandOpMode {
+public abstract class Baseopmode extends CommandOpMode {
 
     protected Robot robot;
 

@@ -8,6 +8,7 @@ import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.Baseopmode;
 import org.firstinspires.ftc.teamcode.subsystems.DriveCommand;
 import org.firstinspires.ftc.teamcode.subsystems.Launcher;
 import org.firstinspires.ftc.teamcode.subsystems.intake;
@@ -18,7 +19,7 @@ import org.firstinspires.ftc.teamcode.subsystems.intake;
  * bindings on its own.
  */
 @TeleOp(name = "TeleopMain")
-public class teleop extends org.firstinspires.ftc.teamcode.opmodes.BaseOpMode {
+public class teleop extends Baseopmode {
 
     private GamepadEx driver;
 
@@ -31,7 +32,7 @@ public class teleop extends org.firstinspires.ftc.teamcode.opmodes.BaseOpMode {
         //
         // NOTE ON THE Y AXIS: GamepadEx.getLeftY() already negates the raw
         // SDK value, so there is deliberately no minus sign here. If forward
-        // on the stick drives the robot backward on your first test, that is
+        // on the stick drives the robot backwar on your first test, that is
         // the line to change - not anything inside Drivetrain.
         robot.drivetrain.setDefaultCommand(new DriveCommand(
                 robot.drivetrain,
@@ -40,7 +41,6 @@ public class teleop extends org.firstinspires.ftc.teamcode.opmodes.BaseOpMode {
                 driver::getRightX,
                 () -> driver.getButton(GamepadKeys.Button.A)
         ));
-
         // Intake: hold right bumper.
         //
         // This is edge-triggered, not polled. The old code wrote a motor

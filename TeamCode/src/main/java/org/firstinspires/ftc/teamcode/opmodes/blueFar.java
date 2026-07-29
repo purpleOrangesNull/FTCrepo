@@ -32,12 +32,16 @@ public class blueFar extends OpMode {
         timer.reset();
 
         follower.followPath(paths.MainChain);
+        follower.refreshVoltage();
     }
 
     @Override
     public void loop() {
         follower.update();
         pathState = autonomousPathUpdate();
+
+        Telem.addData("RegV", follower.getVoltage());
+        Telem.addData("NormV: ", follower.getVoltageNormalized());
 
         Telem.addData("POSE", follower.getPose());
         Telem.addData("TIMER", timer.seconds());
