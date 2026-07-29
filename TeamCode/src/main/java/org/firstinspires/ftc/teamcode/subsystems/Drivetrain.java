@@ -1,10 +1,11 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.Telem;
 
-public class Drivetrain {
+public class Drivetrain extends SubsystemBase {
 
     private static final double EPSILON = 1e-3;
 
@@ -18,6 +19,8 @@ public class Drivetrain {
     private State state = State.STOPPED;
 
     public Drivetrain(DcMotor fl, DcMotor fr, DcMotor bl, DcMotor br) {
+        // SubsystemBase's constructor registers this object with the
+        // CommandScheduler. That is why periodic() below gets called for you.
         frontLeft = fl;
         frontRight = fr;
         backLeft = bl;
@@ -34,8 +37,7 @@ public class Drivetrain {
 
     /**
      * @param lx strafe, positive is right
-     * @param ly forward, positive is forward (caller must already have
-     *           inverted the raw gamepad stick value)
+     * @param ly forward, positive is forward
      * @param rx turn, positive is clockwise
      */
     public void drive(double lx, double ly, double rx) {
@@ -76,7 +78,9 @@ public class Drivetrain {
         return state;
     }
 
-    public void telemetry() {
+    /** Called automatically by CommandScheduler once per loop. */
+    @Override
+    public void periodic() {
         Telem.addLine("Drivetrain");
         Telem.addData("State", state);
     }

@@ -1,11 +1,15 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.Telem;
 
-public class intake {
+// Class name is lowercase to match the existing file on disk. Renaming to
+// Intake is correct Java style but is a case-only filename change, which
+// Windows and Git both handle badly. Do it as its own isolated commit.
+public class intake extends SubsystemBase {
 
     public static final double INTAKE_POWER = 1.0;
 
@@ -41,7 +45,8 @@ public class intake {
         setState(State.OFF);
     }
 
-    public void telemetry() {
+    @Override
+    public void periodic() {
         Telem.addLine("Intake");
         Telem.addData("State", state);
         Telem.addData("Power", motor.getPower());

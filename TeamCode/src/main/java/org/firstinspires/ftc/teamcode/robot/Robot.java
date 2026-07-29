@@ -4,15 +4,18 @@ import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.Telem;
 import org.firstinspires.ftc.teamcode.subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.subsystems.Launcher;
 import org.firstinspires.ftc.teamcode.subsystems.intake;
 
 import java.util.List;
 
+/**
+ * Hardware container. No update() method any more: constructing each
+ * SubsystemBase registers it with the CommandScheduler, which then calls
+ * every periodic() once per loop on its own.
+ */
 public class Robot {
 
     public final Drivetrain drivetrain;
@@ -20,9 +23,6 @@ public class Robot {
     public final Launcher launcher;
 
     private final List<LynxModule> hubs;
-    private final ElapsedTime loopTimer = new ElapsedTime();
-
-    private double loopTime = 0;
 
     public Robot(HardwareMap hm) {
         DcMotor frontLeft   = hm.get(DcMotor.class, "leftFront");
@@ -43,36 +43,13 @@ public class Robot {
         for (LynxModule hub : hubs) {
             hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
         }
-
-        loopTimer.reset();
     }
 
-    /**
-     * Call once per loop, at the END of the loop. The bulk cache clear has to
-     * come before the telemetry reads so the displayed numbers are fresh.
-     */
-    public void update() {
-        loopTime = loopTimer.milliseconds();
-        loopTimer.reset();
-        double hz = loopTime > 0 ? 1000.0 / loopTime : 0;
-
+    /** Called by BaseOpMode at the top of every loop, before any reads. */
+    public void clearBulkCache() {
         for (LynxModule hub : hubs) {
             hub.clearBulkCache();
         }
-
-        Telem.addLine("Loop");
-        Telem.addData("Loop Time (ms)", loopTime);
-        Telem.addData("Hz", hz);
-
-        drivetrain.telemetry();
-        intake.telemetry();
-        launcher.telemetry();
-
-        Telem.update();
-    }
-
-    public double getLoopTime() {
-        return loopTime;
     }
 
     public void stop() {

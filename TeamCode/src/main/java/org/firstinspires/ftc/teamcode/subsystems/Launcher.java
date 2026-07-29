@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -7,7 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.Telem;
 
-public class Launcher {
+public class Launcher extends SubsystemBase {
 
     // ---- TUNE THESE ----------------------------------------------------
 
@@ -43,9 +44,17 @@ public class Launcher {
         this.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         this.motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        // Default velocity PIDF is tuned for slow geared motors and will
-        // undershoot at 4000 RPM. F dominates for a flywheel: full output
-        // (32767) divided by the maximum achievable ticks per second.
+        // DELIBERATELY NOT FTCLib MotorEx / VelocityControl.
+        //
+        // setVelocityPIDFCoefficients uploads these gains to the REV hub,
+        // which then runs the velocity loop in its own firmware at roughly
+        // 1 kHz. FTCLib's VelocityControl run mode computes the correction
+        // in Java at the OpMode loop rate instead, which the driver station
+        // telemetry will show is somewhere near 50-100 Hz.
+        //
+        // For a flywheel that has to hold 4000 RPM through a shot, that is
+        // an order of magnitude difference in correction rate. Do not
+        // "modernize" this to MotorEx without measuring what it costs.
         this.motor.setVelocityPIDFCoefficients(
                 10.0,                                   // P
                 0.5,                                    // I
@@ -105,7 +114,8 @@ public class Launcher {
         motor.setPower(0.0);
     }
 
-    public void telemetry() {
+    @Override
+    public void periodic() {
         Telem.addLine("Launcher");
         Telem.addData("State", state);
         Telem.addData("Target RPM", getTargetRpm());
