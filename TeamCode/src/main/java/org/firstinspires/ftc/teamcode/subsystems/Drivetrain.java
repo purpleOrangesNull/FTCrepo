@@ -19,8 +19,6 @@ public class Drivetrain extends SubsystemBase {
     private State state = State.STOPPED;
 
     public Drivetrain(DcMotor fl, DcMotor fr, DcMotor bl, DcMotor br) {
-        // SubsystemBase's constructor registers this object with the
-        // CommandScheduler. That is why periodic() below gets called for you.
         frontLeft = fl;
         frontRight = fr;
         backLeft = bl;
@@ -35,19 +33,12 @@ public class Drivetrain extends SubsystemBase {
         backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
-    /**
-     * @param lx strafe, positive is right
-     * @param ly forward, positive is forward
-     * @param rx turn, positive is clockwise
-     */
     public void drive(double lx, double ly, double rx) {
         double fl = ly + lx + rx;
         double fr = ly - lx - rx;
         double bl = ly - lx + rx;
         double br = ly + lx - rx;
 
-        // Scale all four together only if one exceeds 1.0. Letting the motor
-        // controller clip each wheel separately would distort the heading.
         double max = Math.max(1.0,
                 Math.max(Math.max(Math.abs(fl), Math.abs(fr)),
                         Math.max(Math.abs(bl), Math.abs(br))));
@@ -78,7 +69,6 @@ public class Drivetrain extends SubsystemBase {
         return state;
     }
 
-    /** Called automatically by CommandScheduler once per loop. */
     @Override
     public void periodic() {
         Telem.addLine("Drivetrain");

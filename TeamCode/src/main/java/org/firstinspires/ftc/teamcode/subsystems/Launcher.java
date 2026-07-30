@@ -10,23 +10,11 @@ import org.firstinspires.ftc.teamcode.Telem;
 
 public class Launcher extends SubsystemBase {
 
-    // ---- TUNE THESE ----------------------------------------------------
-
-    // Encoder counts per revolution OF THE OUTPUT SHAFT.
-    // Bare goBILDA 5202/5203 and bare REV HD Hex are both 28.
-    // With a gearbox this is 28 * gearRatio.
     public static final double TICKS_PER_REV = 28.0;
-
-    // Motor free speed, used only to compute the feedforward term.
     public static final double MAX_RPM = 6000.0;
-
     public static final double FIRE_RPM = 4000.0;
     public static final double IDLE_RPM = -100.0;
-
-    // How close to target counts as ready to shoot.
     public static final double RPM_TOLERANCE = 150.0;
-
-    // --------------------------------------------------------------------
 
     public enum State { FIRING, IDLE }
 
@@ -37,29 +25,16 @@ public class Launcher extends SubsystemBase {
         this.motor = motor;
 
         this.motor.setDirection(DcMotorSimple.Direction.FORWARD);
-
-        // A flywheel should coast. BRAKE would fight its own inertia.
         this.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
         this.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         this.motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        // DELIBERATELY NOT FTCLib MotorEx / VelocityControl.
-        //
-        // setVelocityPIDFCoefficients uploads these gains to the REV hub,
-        // which then runs the velocity loop in its own firmware at roughly
-        // 1 kHz. FTCLib's VelocityControl run mode computes the correction
-        // in Java at the OpMode loop rate instead, which the driver station
-        // telemetry will show is somewhere near 50-100 Hz.
-        //
-        // For a flywheel that has to hold 4000 RPM through a shot, that is
-        // an order of magnitude difference in correction rate. Do not
-        // "modernize" this to MotorEx without measuring what it costs.
         this.motor.setVelocityPIDFCoefficients(
-                10.0,                                   // P
-                0.5,                                    // I
-                0.0,                                    // D
-                32767.0 / rpmToTicksPerSecond(MAX_RPM)  // F
+                10.0,
+                0.5,
+                0.0,
+                32767.0 / rpmToTicksPerSecond(MAX_RPM)
         );
 
         setState(State.IDLE);
@@ -73,7 +48,6 @@ public class Launcher extends SubsystemBase {
         return ticksPerSecond / TICKS_PER_REV * 60.0;
     }
 
-    /** Command any speed directly, in RPM. */
     public void setRpm(double rpm) {
         motor.setVelocity(rpmToTicksPerSecond(rpm));
     }
@@ -102,13 +76,11 @@ public class Launcher extends SubsystemBase {
         return state == State.FIRING ? FIRE_RPM : IDLE_RPM;
     }
 
-    /** True only while spun up and holding within tolerance. */
     public boolean atSpeed() {
         return state == State.FIRING
                 && Math.abs(getRpm() - FIRE_RPM) < RPM_TOLERANCE;
     }
 
-    /** Cut power entirely and let the wheel coast down. */
     public void stop() {
         state = State.IDLE;
         motor.setPower(0.0);

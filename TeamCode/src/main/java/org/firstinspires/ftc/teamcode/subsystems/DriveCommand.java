@@ -7,14 +7,6 @@ import org.firstinspires.ftc.teamcode.subsystems.Drivetrain;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
-/**
- * Default command for the drivetrain. Suppliers rather than raw doubles so
- * the command reads live gamepad values every cycle instead of capturing a
- * single stale snapshot at construction time.
- *
- * isFinished() is not overridden, so it defaults to false and this runs
- * forever - which is exactly what a default command should do.
- */
 public class DriveCommand extends CommandBase {
 
     public static final double SLOW_FACTOR = 0.35;
@@ -36,9 +28,6 @@ public class DriveCommand extends CommandBase {
         this.rx = rx;
         this.slow = slow;
 
-        // Declares ownership. If any other command requiring the drivetrain
-        // gets scheduled, the scheduler interrupts this one automatically
-        // instead of letting both write motor powers in the same loop.
         addRequirements(drivetrain);
     }
 

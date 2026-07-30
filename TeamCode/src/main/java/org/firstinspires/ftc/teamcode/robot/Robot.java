@@ -11,11 +11,6 @@ import org.firstinspires.ftc.teamcode.subsystems.intake;
 
 import java.util.List;
 
-/**
- * Hardware container. No update() method any more: constructing each
- * SubsystemBase registers it with the CommandScheduler, which then calls
- * every periodic() once per loop on its own.
- */
 public class Robot {
 
     public final Drivetrain drivetrain;
@@ -31,8 +26,6 @@ public class Robot {
         DcMotor backRight   = hm.get(DcMotor.class, "rightBack");
         DcMotor intakeMotor = hm.get(DcMotor.class, "intake");
 
-        // DcMotorEx, not DcMotor: setVelocity() and the PIDF coefficients
-        // only exist on the Ex interface.
         DcMotorEx launcherMotor = hm.get(DcMotorEx.class, "launcher");
 
         drivetrain = new Drivetrain(frontLeft, frontRight, backLeft, backRight);
@@ -45,7 +38,6 @@ public class Robot {
         }
     }
 
-    /** Called by BaseOpMode at the top of every loop, before any reads. */
     public void clearBulkCache() {
         for (LynxModule hub : hubs) {
             hub.clearBulkCache();

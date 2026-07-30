@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmodes;
+package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.CommandScheduler;
@@ -7,12 +7,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.Telem;
 import org.firstinspires.ftc.teamcode.robot.Robot;
 
-/**
- * Shared base for every OpMode. Exists because CommandOpMode owns the loop
- * and gives you no per-cycle hook for work that is not a subsystem or a
- * command - specifically the Lynx bulk cache clear and the single telemetry
- * flush. Overriding run() is that hook.
- */
 public abstract class BaseOpMode extends CommandOpMode {
 
     protected Robot robot;
@@ -20,16 +14,10 @@ public abstract class BaseOpMode extends CommandOpMode {
     private final ElapsedTime loopTimer = new ElapsedTime();
     private double loopTime = 0;
 
-    /** Subclasses set up bindings and default commands here. */
     protected abstract void configure();
 
     @Override
     public void initialize() {
-        // ORDER IS LOAD-BEARING. reset() clears the scheduler's list of
-        // registered subsystems. Every SubsystemBase registers itself in its
-        // own constructor, so this MUST run before Robot is constructed.
-        // Reversed, the subsystems silently unregister and no periodic()
-        // ever runs - no error, just dead telemetry and dead subsystems.
         CommandScheduler.getInstance().reset();
 
         Telem.init(telemetry);
@@ -46,12 +34,8 @@ public abstract class BaseOpMode extends CommandOpMode {
 
     @Override
     public void run() {
-        // Clear FIRST, so every sensor read this cycle is fresh. This is the
-        // textbook placement, and better than clearing at the end of the loop.
         robot.clearBulkCache();
 
-        // The scheduler: polls button bindings, runs scheduled commands,
-        // then calls periodic() on every registered subsystem.
         super.run();
 
         loopTime = loopTimer.milliseconds();
@@ -61,11 +45,9 @@ public abstract class BaseOpMode extends CommandOpMode {
         Telem.addData("Loop Time (ms)", loopTime);
         Telem.addData("Hz", loopTime > 0 ? 1000.0 / loopTime : 0);
 
-        // One flush, after every periodic() has queued its lines.
         Telem.update();
     }
 
-    /** CommandOpMode calls this once, after the loop exits. */
     @Override
     public void reset() {
         if (robot != null) {
