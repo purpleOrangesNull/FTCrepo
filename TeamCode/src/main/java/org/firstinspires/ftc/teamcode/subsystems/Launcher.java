@@ -10,11 +10,11 @@ import org.firstinspires.ftc.teamcode.Telem;
 
 public class Launcher extends SubsystemBase {
 
-    public static final double TICKS_PER_REV = 28.0;
-    public static final double MAX_RPM = 6000.0;
-    public static final double FIRE_RPM = 4000.0;
-    public static final double IDLE_RPM = -100.0;
-    public static final double RPM_TOLERANCE = 150.0;
+    public static final double ticksPerRev = 28.0;
+    public static final double maxRpm = 6000.0;
+    public static final double fireRpm = 4000.0;
+    public static final double idleRpm = -300.0;
+    public static final double rpmTolerance = 150.0;
 
     public enum State { FIRING, IDLE }
 
@@ -34,18 +34,18 @@ public class Launcher extends SubsystemBase {
                 10.0,
                 0.5,
                 0.0,
-                32767.0 / rpmToTicksPerSecond(MAX_RPM)
+                32767.0 / rpmToTicksPerSecond(maxRpm)
         );
 
         setState(State.IDLE);
     }
 
     public static double rpmToTicksPerSecond(double rpm) {
-        return rpm / 60.0 * TICKS_PER_REV;
+        return rpm / 60.0 * ticksPerRev;
     }
 
     public static double ticksPerSecondToRpm(double ticksPerSecond) {
-        return ticksPerSecond / TICKS_PER_REV * 60.0;
+        return ticksPerSecond / ticksPerRev * 60.0;
     }
 
     public void setRpm(double rpm) {
@@ -56,10 +56,10 @@ public class Launcher extends SubsystemBase {
         this.state = state;
         switch (state) {
             case FIRING:
-                setRpm(FIRE_RPM);
+                setRpm(fireRpm);
                 break;
             case IDLE:
-                setRpm(IDLE_RPM);
+                setRpm(idleRpm);
                 break;
         }
     }
@@ -73,12 +73,12 @@ public class Launcher extends SubsystemBase {
     }
 
     public double getTargetRpm() {
-        return state == State.FIRING ? FIRE_RPM : IDLE_RPM;
+        return state == State.FIRING ? fireRpm : idleRpm;
     }
 
     public boolean atSpeed() {
         return state == State.FIRING
-                && Math.abs(getRpm() - FIRE_RPM) < RPM_TOLERANCE;
+                && Math.abs(getRpm() - fireRpm) < rpmTolerance;
     }
 
     public void stop() {

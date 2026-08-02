@@ -9,7 +9,6 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Telem;
-import org.firstinspires.ftc.teamcode.pedroPathing.constants.Constants;
 
 @Autonomous(name = "Close Blue Auto", group = "Autonomous")
 public class blueclose extends OpMode {

@@ -10,7 +10,7 @@ public class intake extends SubsystemBase {
 
     public static final double INTAKE_POWER = 1.0;
 
-    public enum State { ON, OFF }
+    public enum State { ON, OFF, REV }
 
     private final DcMotor motor;
     private State state = State.OFF;
@@ -30,6 +30,9 @@ public class intake extends SubsystemBase {
                 break;
             case OFF:
                 motor.setPower(0.0);
+                break;
+            case REV:
+                motor.setPower(0.8);
                 break;
         }
     }

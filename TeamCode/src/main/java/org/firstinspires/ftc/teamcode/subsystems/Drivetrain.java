@@ -1,13 +1,12 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.Telem;
 
-public class Drivetrain extends SubsystemBase {
+public class Drivetrain extends com.arcrobotics.ftclib.command.SubsystemBase {
 
-    private static final double EPSILON = 1e-3;
+    private static final double epsilon = 1e-3;
 
     public enum State { DRIVING, STOPPED }
 
@@ -53,10 +52,10 @@ public class Drivetrain extends SubsystemBase {
         backLeft.setPower(bl);
         backRight.setPower(br);
 
-        boolean moving = Math.abs(fl) > EPSILON
-                || Math.abs(fr) > EPSILON
-                || Math.abs(bl) > EPSILON
-                || Math.abs(br) > EPSILON;
+        boolean moving = Math.abs(fl) > epsilon
+                || Math.abs(fr) > epsilon
+                || Math.abs(bl) > epsilon
+                || Math.abs(br) > epsilon;
 
         state = moving ? State.DRIVING : State.STOPPED;
     }

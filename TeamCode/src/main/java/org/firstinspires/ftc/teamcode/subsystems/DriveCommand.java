@@ -2,14 +2,12 @@ package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.arcrobotics.ftclib.command.CommandBase;
 
-import org.firstinspires.ftc.teamcode.subsystems.Drivetrain;
-
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 public class DriveCommand extends CommandBase {
 
-    public static final double SLOW_FACTOR = 0.35;
+    public static final double slowFactor = 0.35;
 
     private final Drivetrain drivetrain;
     private final DoubleSupplier lx;
@@ -33,7 +31,7 @@ public class DriveCommand extends CommandBase {
 
     @Override
     public void execute() {
-        double scale = slow.getAsBoolean() ? SLOW_FACTOR : 1.0;
+        double scale = slow.getAsBoolean() ? slowFactor : 1.0;
 
         drivetrain.drive(
                 lx.getAsDouble() * scale,

@@ -30,6 +30,16 @@ public class teleop extends BaseOpMode {
         new GamepadButton(driver, GamepadKeys.Button.RIGHT_BUMPER)
                 .whenPressed(new InstantCommand(
                         () -> robot.intake.setState(intake.State.ON),
+
+                        robot.intake))
+                .whenReleased(new InstantCommand(
+                        () -> robot.intake.setState(intake.State.OFF),
+                        robot.intake));
+
+        new GamepadButton(driver, GamepadKeys.Button.Y)
+                .whenPressed(new InstantCommand(
+                        () -> robot.intake.setState(intake.State.REV),
+
                         robot.intake))
                 .whenReleased(new InstantCommand(
                         () -> robot.intake.setState(intake.State.OFF),
