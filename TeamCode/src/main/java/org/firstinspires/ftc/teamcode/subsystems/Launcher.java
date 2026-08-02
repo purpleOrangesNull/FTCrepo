@@ -11,31 +11,33 @@ import org.firstinspires.ftc.teamcode.Telem;
 public class Launcher extends SubsystemBase {
 
     public static final double ticksPerRev = 28.0;
-    public static final double maxRpm = 6000.0;
-    public static final double fireRpm = 4000.0;
+    public static final double closeRpm = 3200.0;
+    public static final double farRpm = 4000.0;
     public static final double idleRpm = -300.0;
-    public static final double rpmTolerance = 150.0;
+    public static final double rpmTolerance = 50.0;
 
     public enum State { FIRING, IDLE }
+    public enum mode { close, far }
 
-    private final DcMotorEx motor;
-    private State state = State.IDLE;
+    private final DcMotorEx leader;
+    private final DcMotorEx follower;
 
-    public Launcher(DcMotorEx motor) {
-        this.motor = motor;
+    private State shootState = State.IDLE;
+    private mode shootMode = mode.far;
+    private double setpointRpm = idleRpm;
 
-        this.motor.setDirection(DcMotorSimple.Direction.FORWARD);
-        this.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+    public Launcher(DcMotorEx leader, DcMotorEx follower) {
+        this.leader = leader;
+        this.follower = follower;
 
-        this.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        this.motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        this.leader.setDirection(DcMotorSimple.Direction.FORWARD);
+        this.follower.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        this.motor.setVelocityPIDFCoefficients(
-                10.0,
-                0.5,
-                0.0,
-                32767.0 / rpmToTicksPerSecond(maxRpm)
-        );
+        for (DcMotorEx motor : new DcMotorEx[]{this.leader, this.follower}) {
+            motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+            motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        }
 
         setState(State.IDLE);
     }
@@ -48,51 +50,61 @@ public class Launcher extends SubsystemBase {
         return ticksPerSecond / ticksPerRev * 60.0;
     }
 
-    public void setRpm(double rpm) {
-        motor.setVelocity(rpmToTicksPerSecond(rpm));
+    private double bangBang(double measuredRpm, double setpointRpm) {
+        return measuredRpm < setpointRpm - rpmTolerance ? 1.0 : 0.0;
     }
 
     public void setState(State state) {
-        this.state = state;
-        switch (state) {
-            case FIRING:
-                setRpm(fireRpm);
-                break;
-            case IDLE:
-                setRpm(idleRpm);
-                break;
-        }
+        this.shootState = state;
     }
 
     public State getState() {
-        return state;
+        return shootState;
+    }
+
+    public void setMode(mode mode) {
+        this.shootMode = mode;
+    }
+
+    public mode getMode() {
+        return shootMode;
     }
 
     public double getRpm() {
-        return ticksPerSecondToRpm(motor.getVelocity());
-    }
-
-    public double getTargetRpm() {
-        return state == State.FIRING ? fireRpm : idleRpm;
+        return ticksPerSecondToRpm(leader.getVelocity());
     }
 
     public boolean atSpeed() {
-        return state == State.FIRING
-                && Math.abs(getRpm() - fireRpm) < rpmTolerance;
+        return shootState == State.FIRING
+                && Math.abs(getRpm() - setpointRpm) < rpmTolerance;
     }
 
     public void stop() {
-        state = State.IDLE;
-        motor.setPower(0.0);
+        shootState = State.IDLE;
+        leader.setPower(0.0);
+        follower.setPower(0.0);
     }
 
     @Override
     public void periodic() {
+        double targetRpm = (shootMode == mode.close) ? closeRpm : farRpm;
+
+        setpointRpm = (shootState == State.FIRING) ? targetRpm : idleRpm;
+
+        double measuredRpm = getRpm();
+        double power = bangBang(measuredRpm, setpointRpm);
+
+        leader.setPower(power);
+        follower.setPower(power);
+
         Telem.addLine("Launcher");
-        Telem.addData("State", state);
-        Telem.addData("Target RPM", getTargetRpm());
-        Telem.addData("Actual RPM", getRpm());
+        Telem.addData("Shoot State", shootState);
+        Telem.addData("Mode State", shootMode);
+        Telem.addData("Setpoint RPM", setpointRpm);
+        Telem.addData("Actual RPM", measuredRpm);
         Telem.addData("At Speed", atSpeed());
-        Telem.addData("Current (A)", motor.getCurrent(CurrentUnit.AMPS));
+        Telem.addData("Power", power);
+        Telem.addData("Leader Current (A)", leader.getCurrent(CurrentUnit.AMPS));
+        Telem.addData("Follower Current (A)", follower.getCurrent(CurrentUnit.AMPS));
     }
 }

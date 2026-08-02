@@ -48,7 +48,21 @@ public class teleop extends BaseOpMode {
 
         new GamepadButton(driver, GamepadKeys.Button.X)
                 .whenPressed(new InstantCommand(
-                        () -> robot.launcher.setState(Launcher.State.FIRING),
+                        () -> {
+                            robot.launcher.setMode(Launcher.mode.close);
+                            robot.launcher.setState(Launcher.State.FIRING);
+                        },
+                        robot.launcher))
+                .whenReleased(new InstantCommand(
+                        () -> robot.launcher.setState(Launcher.State.IDLE),
+                        robot.launcher));
+
+        new GamepadButton(driver, GamepadKeys.Button.A)
+                .whenPressed(new InstantCommand(
+                        () -> {
+                            robot.launcher.setMode(Launcher.mode.far);
+                            robot.launcher.setState(Launcher.State.FIRING);
+                        },
                         robot.launcher))
                 .whenReleased(new InstantCommand(
                         () -> robot.launcher.setState(Launcher.State.IDLE),

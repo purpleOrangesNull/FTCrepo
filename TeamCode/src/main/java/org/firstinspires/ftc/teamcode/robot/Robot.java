@@ -27,10 +27,11 @@ public class Robot {
         DcMotor intakeMotor = hm.get(DcMotor.class, "intake");
 
         DcMotorEx launcherMotor = hm.get(DcMotorEx.class, "launcher");
+        DcMotorEx launcher2 = hm.get(DcMotorEx.class, "launcher2");
 
         drivetrain = new Drivetrain(frontLeft, frontRight, backLeft, backRight);
         intake = new intake(intakeMotor);
-        launcher = new Launcher(launcherMotor);
+        launcher = new Launcher(launcherMotor, launcher2);
 
         hubs = hm.getAll(LynxModule.class);
         for (LynxModule hub : hubs) {
