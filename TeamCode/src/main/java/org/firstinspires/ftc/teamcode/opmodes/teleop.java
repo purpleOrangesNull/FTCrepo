@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.Constants.BaseOpMode;
 import org.firstinspires.ftc.teamcode.subsystems.DriveCommand;
 import org.firstinspires.ftc.teamcode.subsystems.Launcher;
-import org.firstinspires.ftc.teamcode.subsystems.intake;
+import org.firstinspires.ftc.teamcode.subsystems.Intake;
 
 @TeleOp(name = "TeleopMain")
 public class teleop extends BaseOpMode {
@@ -30,20 +30,18 @@ public class teleop extends BaseOpMode {
 
         new GamepadButton(driver, GamepadKeys.Button.RIGHT_BUMPER)
                 .whenPressed(new InstantCommand(
-                        () -> robot.intake.setState(intake.State.ON),
-
+                        () -> robot.intake.setState(Intake.State.ON),
                         robot.intake))
                 .whenReleased(new InstantCommand(
-                        () -> robot.intake.setState(intake.State.OFF),
+                        () -> robot.intake.setState(Intake.State.OFF),
                         robot.intake));
 
         new GamepadButton(driver, GamepadKeys.Button.Y)
                 .whenPressed(new InstantCommand(
-                        () -> robot.intake.setState(intake.State.REV),
-
+                        () -> robot.intake.setState(Intake.State.REV),
                         robot.intake))
                 .whenReleased(new InstantCommand(
-                        () -> robot.intake.setState(intake.State.OFF),
+                        () -> robot.intake.setState(Intake.State.OFF),
                         robot.intake));
 
         new GamepadButton(driver, GamepadKeys.Button.X)

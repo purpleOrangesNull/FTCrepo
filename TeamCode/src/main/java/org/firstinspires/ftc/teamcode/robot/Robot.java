@@ -7,14 +7,14 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.subsystems.Launcher;
-import org.firstinspires.ftc.teamcode.subsystems.intake;
+import org.firstinspires.ftc.teamcode.subsystems.Intake;
 
 import java.util.List;
 
 public class Robot {
 
     public final Drivetrain drivetrain;
-    public final intake intake;
+    public final Intake intake;
     public final Launcher launcher;
 
     private final List<LynxModule> hubs;
@@ -25,12 +25,13 @@ public class Robot {
         DcMotor backLeft    = hm.get(DcMotor.class, "leftBack");
         DcMotor backRight   = hm.get(DcMotor.class, "rightBack");
         DcMotor intakeMotor = hm.get(DcMotor.class, "intake");
+        DcMotor transferMotor = hm.get(DcMotor.class, "transfer");
 
         DcMotorEx launcherMotor = hm.get(DcMotorEx.class, "launcher");
         DcMotorEx launcher2 = hm.get(DcMotorEx.class, "launcher2");
 
         drivetrain = new Drivetrain(frontLeft, frontRight, backLeft, backRight);
-        intake = new intake(intakeMotor);
+        intake = new Intake(intakeMotor, transferMotor);
         launcher = new Launcher(launcherMotor, launcher2);
 
         hubs = hm.getAll(LynxModule.class);

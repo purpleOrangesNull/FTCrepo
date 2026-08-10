@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.Constants;
 
 import com.pedropathing.localization.Pose;
 
-public class farPoses {
+public class closePoses {
 
     public static final Pose startPose = new Pose(56.00, 8.00, Math.toRadians(90));
 

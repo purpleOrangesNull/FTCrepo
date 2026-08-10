@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import com.arcrobotics.ftclib.command.Command;
+import com.arcrobotics.ftclib.command.FunctionalCommand;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -13,7 +15,7 @@ public class Launcher extends SubsystemBase {
     public static final double ticksPerRev = 28.0;
     public static final double closeRpm = 3200.0;
     public static final double farRpm = 4000.0;
-    public static final double idleRpm = -300.0;
+    public static final double idleRpm = -400.0;
     public static final double rpmTolerance = 50.0;
 
     public enum State { FIRING, IDLE }
@@ -83,6 +85,19 @@ public class Launcher extends SubsystemBase {
         shootState = State.IDLE;
         leader.setPower(0.0);
         follower.setPower(0.0);
+    }
+
+    public Command spinCommand(mode shootMode) {
+        return new FunctionalCommand(
+                () -> {
+                    setMode(shootMode);
+                    setState(State.FIRING);
+                },
+                () -> {},
+                interrupted -> setState(State.IDLE),
+                () -> false,
+                this
+        );
     }
 
     @Override
