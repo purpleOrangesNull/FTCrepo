@@ -20,14 +20,6 @@ public class teleop extends BaseOpMode {
     protected void configure() {
         driver = new GamepadEx(gamepad1);
 
-        robot.drivetrain.setDefaultCommand(new DriveCommand(
-                robot.drivetrain,
-                driver::getLeftX,
-                driver::getLeftY,
-                driver::getRightX,
-                () -> driver.getButton(GamepadKeys.Button.A)
-        ));
-
         new GamepadButton(driver, GamepadKeys.Button.RIGHT_BUMPER)
                 .whenPressed(new InstantCommand(
                         () -> robot.intake.setState(Intake.State.ON),

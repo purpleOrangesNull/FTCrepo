@@ -5,12 +5,14 @@ import com.arcrobotics.ftclib.command.FunctionalCommand;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Telem;
 
 public class Intake extends SubsystemBase {
 
     public static final double INTAKE_POWER = 1.0;
+    public static final double INTAKE_IDLE_POWER = 0.15;
     public static final double TRANSFER_POWER = 1.0;
 
     public enum State { ON, OFF, REV }
@@ -23,11 +25,11 @@ public class Intake extends SubsystemBase {
 
     public Intake(DcMotor motor, DcMotor transferMotor) {
         this.motor = motor;
-        this.motor.setDirection(DcMotorSimple.Direction.REVERSE);
+        this.motor.setDirection(DcMotorSimple.Direction.FORWARD);
         this.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         this.transferMotor = transferMotor;
-        this.transferMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        this.transferMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         this.transferMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         setState(State.OFF);
@@ -41,7 +43,7 @@ public class Intake extends SubsystemBase {
                 motor.setPower(INTAKE_POWER);
                 break;
             case OFF:
-                motor.setPower(0.0);
+                motor.setPower(INTAKE_IDLE_POWER);
                 break;
             case REV:
                 motor.setPower(0.8);
@@ -94,6 +96,23 @@ public class Intake extends SubsystemBase {
                 interrupted -> setTransferState(State.OFF),
                 () -> false,
                 this
+        );
+    }
+
+    public Command feedCommand(Launcher launcher, long durationMs) {
+        ElapsedTime timer = new ElapsedTime();
+        return new FunctionalCommand(
+                () -> {
+                    setTransferState(State.ON);
+                    timer.reset();
+                },
+                () -> {},
+                interrupted -> {
+                    setTransferState(State.OFF);
+                    launcher.setState(Launcher.State.IDLE);
+                },
+                () -> timer.milliseconds() >= durationMs,
+                this, launcher
         );
     }
 

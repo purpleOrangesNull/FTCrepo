@@ -24,7 +24,7 @@ public class Robot {
         DcMotor frontRight  = hm.get(DcMotor.class, "rightFront");
         DcMotor backLeft    = hm.get(DcMotor.class, "leftBack");
         DcMotor backRight   = hm.get(DcMotor.class, "rightBack");
-        DcMotor intakeMotor = hm.get(DcMotor.class, "intake");
+        DcMotorEx intakeMotor = hm.get(DcMotorEx.class, "intake");
         DcMotor transferMotor = hm.get(DcMotor.class, "transfer");
 
         DcMotorEx launcherMotor = hm.get(DcMotorEx.class, "launcher");

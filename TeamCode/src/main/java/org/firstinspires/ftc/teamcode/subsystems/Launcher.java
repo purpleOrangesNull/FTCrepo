@@ -6,6 +6,7 @@ import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.Telem;
@@ -96,6 +97,21 @@ public class Launcher extends SubsystemBase {
                 () -> {},
                 interrupted -> setState(State.IDLE),
                 () -> false,
+                this
+        );
+    }
+
+    public Command spinUpCommand(mode mode, long timeoutMs) {
+        ElapsedTime timer = new ElapsedTime();
+        return new FunctionalCommand(
+                () -> {
+                    setMode(mode);
+                    setState(State.FIRING);
+                    timer.reset();
+                },
+                () -> {},
+                interrupted -> {},
+                () -> atSpeed() || timer.milliseconds() >= timeoutMs,
                 this
         );
     }
